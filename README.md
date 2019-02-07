@@ -5,7 +5,7 @@ Application allows to remove the borders from window game, position it to center
 
 ## Setup
 1. Select the windowed mode and the required resolution in the game.
-2. Run the program, click "..." in the lower right corner.
+2. Run the program, click "..." in the bottom right angle.
 3. Select the game window and resolution. The list of resolution can be edited in the file "Resolutions.txt".
 
 ## Screenshots
