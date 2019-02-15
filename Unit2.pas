@@ -10,13 +10,16 @@ type
   TSelectWnd = class(TForm)
     ListBox: TListBox;
     OkBtn: TButton;
-    ComboBox: TComboBox;
-    Label1: TLabel;
+    ResolutionsCB: TComboBox;
+    ResolutionsLbl: TLabel;
     CancelBtn: TButton;
+    AutoCB: TCheckBox;
     procedure FormShow(Sender: TObject);
     procedure OkBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
+    procedure AutoCBMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
   public
@@ -37,7 +40,7 @@ var
   Ini: TIniFile;
 begin
   Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'Setup.ini');
-  ComboBox.Text:=Ini.ReadString('Main', 'Resolution', '1280x720');
+  ResolutionsCB.Text:=Ini.ReadString('Main', 'Resolution', '1280x720');
   Ini.Free;
   ListBox.Clear;
   Window:=GetWindow(Handle, GW_HWNDFIRST);
@@ -57,22 +60,30 @@ end;
 
 procedure TSelectWnd.OkBtnClick(Sender: TObject);
 var
-  WND: HWND; WndWidth, WndHeight: integer;
+  Wnd: HWND;
+  WndWidth, WndHeight: integer;
+  WndRect: TRect;
   Ini: TIniFile;
 begin
-  if ComboBox.Text <> '1280x720' then begin
+  if ResolutionsCB.Text <> '1280x720' then begin
     Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'Setup.ini');
-    Ini.WriteString('Main', 'Resolution', ComboBox.Text);
+    Ini.WriteString('Main', 'Resolution', ResolutionsCB.Text);
     Ini.Free;
   end;
   if ListBox.ItemIndex <> -1 then begin
     WND:=FindWindow(nil, PChar(ListBox.Items[ListBox.ItemIndex]));
     if WND <> 0 then begin
-      WndWidth:=StrToIntDef(Copy(ComboBox.Text, 1, Pos('x', ComboBox.Text) - 1), 640);
-      WndHeight:=StrToIntDef(Copy(ComboBox.Text, Pos('x', ComboBox.Text) + 1, Length(ComboBox.Text)), 480);
-      SetWindowLong(WND, GWL_STYLE, GetWindowLong(WND, GWL_STYLE) and not WS_BORDER and not WS_SIZEBOX and not WS_DLGFRAME);
-      SetWindowPos(WND, HWND_TOP, Screen.Width div 2 - WndWidth div 2, Screen.Height div 2 - WndHeight div 2, WndWidth, WndHeight, SWP_FRAMECHANGED);
-      SetForegroundWindow(WND);
+      if AutoCB.Enabled = false then begin
+        WndWidth:=StrToIntDef(Copy(ResolutionsCB.Text, 1, Pos('x', ResolutionsCB.Text) - 1), 640);
+        WndHeight:=StrToIntDef(Copy(ResolutionsCB.Text, Pos('x', ResolutionsCB.Text) + 1, Length(ResolutionsCB.Text)), 480);
+      end else begin
+        Windows.GetClientRect(Wnd, WndRect);
+        WndWidth:=WndRect.Right;
+        WndHeight:=WndRect.Bottom;
+      end;
+      SetWindowLong(Wnd, GWL_STYLE, GetWindowLong(Wnd, GWL_STYLE) and not WS_BORDER and not WS_SIZEBOX and not WS_DLGFRAME);
+      SetWindowPos(Wnd, HWND_TOP, Screen.Width div 2 - WndWidth div 2, Screen.Height div 2 - WndHeight div 2, WndWidth, WndHeight, SWP_FRAMECHANGED);
+      SetForegroundWindow(Wnd);
     end;
     Close;
   end;
@@ -81,12 +92,18 @@ end;
 procedure TSelectWnd.FormCreate(Sender: TObject);
 begin
   if FileExists(ExtractFilePath(ParamStr(0)) + 'Resolutions.txt') then
-    ComboBox.Items.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Resolutions.txt');
+    ResolutionsCB.Items.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Resolutions.txt');
 end;
 
 procedure TSelectWnd.CancelBtnClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TSelectWnd.AutoCBMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  ResolutionsCB.Enabled:=AutoCB.Checked;
 end;
 
 end.

@@ -18,8 +18,8 @@ object SelectWnd: TSelectWnd
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 8
+  object ResolutionsLbl: TLabel
+    Left = 160
     Top = 208
     Width = 53
     Height = 13
@@ -42,11 +42,12 @@ object SelectWnd: TSelectWnd
     TabOrder = 1
     OnClick = OkBtnClick
   end
-  object ComboBox: TComboBox
-    Left = 72
+  object ResolutionsCB: TComboBox
+    Left = 224
     Top = 205
     Width = 89
     Height = 21
+    Enabled = False
     ItemHeight = 13
     TabOrder = 2
     Text = '1280x720'
@@ -59,5 +60,16 @@ object SelectWnd: TSelectWnd
     Caption = 'Cancel'
     TabOrder = 3
     OnClick = CancelBtnClick
+  end
+  object AutoCB: TCheckBox
+    Left = 8
+    Top = 206
+    Width = 49
+    Height = 17
+    Caption = 'Auto'
+    Checked = True
+    State = cbChecked
+    TabOrder = 4
+    OnMouseDown = AutoCBMouseDown
   end
 end

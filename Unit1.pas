@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ShellAPI, XPMan;
+  Dialogs, StdCtrls, ShellAPI, IniFiles, XPMan;
 
 type
   TMain = class(TForm)
@@ -22,6 +22,7 @@ type
 
 var
   Main: TMain;
+  CloseExplorer: boolean;
 
 implementation
 
@@ -37,12 +38,18 @@ end;
 
 procedure TMain.CloseBtnClick(Sender: TObject);
 begin
-  ShellExecute(0, 'open', PChar(GetEnvironmentVariable('WinDir') + '\explorer.exe'), nil, nil, SW_SHOWNORMAL);
+  if CloseExplorer then
+    ShellExecute(0, 'open', PChar(GetEnvironmentVariable('WinDir') + '\explorer.exe'), nil, nil, SW_SHOWNORMAL);
   Close;
 end;
 
 procedure TMain.FormCreate(Sender: TObject);
+var
+  Ini: TIniFile;
 begin
+  Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'Setup.ini');
+  CloseExplorer:=Ini.ReadBool('Main', 'CloseExplorer', true);
+  Ini.Free;
   Application.Title:=Caption;
   Top:=0;
   Left:=0;
@@ -52,7 +59,8 @@ begin
   SelectWndBtn.Left:=Screen.Width - SelectWndBtn.Width - SelectWndBtn.Height * 2 - CloseBtn.Width;
   CloseBtn.Top:=Screen.Height - CloseBtn.Height * 2;
   CloseBtn.Left:=Screen.Width - CloseBtn.Width - CloseBtn.Height;
-  ShellExecute(0, 'open', 'taskkill', PChar(' /im explorer.exe /f'), nil, SW_HIDE);
+  if CloseExplorer then
+    ShellExecute(0, 'open', 'taskkill', PChar(' /im explorer.exe /f'), nil, SW_HIDE);
 end;
 
 end.
