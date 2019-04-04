@@ -14,6 +14,7 @@ type
     procedure SelectWndBtnClick(Sender: TObject);
     procedure CloseBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -22,14 +23,13 @@ type
 
 var
   Main: TMain;
-  CloseExplorer: boolean;
+  HideTaskBar: boolean;
 
 implementation
 
 uses Unit2;
 
 {$R *.dfm}
-{$R UAC.res}
 
 procedure TMain.SelectWndBtnClick(Sender: TObject);
 begin
@@ -38,8 +38,8 @@ end;
 
 procedure TMain.CloseBtnClick(Sender: TObject);
 begin
-  if CloseExplorer then
-    ShellExecute(0, 'open', PChar(GetEnvironmentVariable('WinDir') + '\explorer.exe'), nil, nil, SW_SHOWNORMAL);
+  if HideTaskBar then
+    ShowWindow(FindWindow('Shell_TrayWnd', nil), SW_SHOW);
   Close;
 end;
 
@@ -48,7 +48,7 @@ var
   Ini: TIniFile;
 begin
   Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'Setup.ini');
-  CloseExplorer:=Ini.ReadBool('Main', 'CloseExplorer', true);
+  HideTaskBar:=Ini.ReadBool('Main', 'HideTaskBar', true);
   Ini.Free;
   Application.Title:=Caption;
   Top:=0;
@@ -59,8 +59,14 @@ begin
   SelectWndBtn.Left:=Screen.Width - SelectWndBtn.Width - SelectWndBtn.Height * 2 - CloseBtn.Width;
   CloseBtn.Top:=Screen.Height - CloseBtn.Height * 2;
   CloseBtn.Left:=Screen.Width - CloseBtn.Width - CloseBtn.Height;
-  if CloseExplorer then
-    ShellExecute(0, 'open', 'taskkill', PChar(' /im explorer.exe /f'), nil, SW_HIDE);
+  if HideTaskBar then
+    ShowWindow(FindWindow('Shell_TrayWnd', nil), SW_HIDE);
+end;
+
+procedure TMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if HideTaskBar then
+    ShowWindow(FindWindow('Shell_TrayWnd', nil), SW_SHOW);
 end;
 
 end.
