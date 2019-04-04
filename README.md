@@ -8,7 +8,7 @@ Application allows to remove the borders from window game, position it to center
 2. Run the program, click "..." in the bottom right angle.
 3. Select the game window. The list of custom resolutions can be edited in the file "Resolutions.txt".
 
-Automatic closing of the explorer can be disabled in the "Setup.ini".
+Auto hide of the taskbar can be disabled in the "Setup.ini".
 ## Screenshots
 ![](https://user-images.githubusercontent.com/9499881/52374769-8a395a00-2a77-11e9-9bdb-3a1d9362448f.png)
 
