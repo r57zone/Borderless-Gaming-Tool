@@ -1,7 +1,7 @@
 [![EN](https://user-images.githubusercontent.com/9499881/33184537-7be87e86-d096-11e7-89bb-f3286f752bc6.png)](https://github.com/r57zone/Borderless-Gaming-Tool/blob/master/README.md) 
 [![RU](https://user-images.githubusercontent.com/9499881/27683795-5b0fbac6-5cd8-11e7-929c-057833e01fb1.png)](https://github.com/r57zone/Borderless-Gaming-Tool/blob/master/README.RU.md) 
 # Borderless Gaming Tool
-Application allows to remove the borders from window game, position it to center and hide the background. This will allow to run games in a lower resolution, without scaling and blurring the picture.
+Application allows to remove the borders from window game, position it to center and hide the background. This will allow to run games in a lower resolution, without scaling and blurring the picture. Also can stretch the window without blurring, for example, 1080p games to 4K.
 
 ## Setup
 1. Select the windowed mode and the required resolution in the game.
@@ -15,7 +15,7 @@ Auto hide of the taskbar can be disabled in the "Setup.ini".
 ![](https://user-images.githubusercontent.com/9499881/52374598-097a5e00-2a77-11e9-9ae2-3d693ee36166.png)
 
 ## Download
->Version for Windows 7, Windows 8.1, Windows 10.
+>Version for Windows 7, 8.1, 10.
 
 **[Download](https://github.com/r57zone/Borderless-Gaming-Tool/releases)**
 

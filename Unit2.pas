@@ -63,6 +63,7 @@ var
   Wnd: HWND;
   WndWidth, WndHeight: integer;
   WndRect: TRect;
+  MultiplyValue: integer;
   Ini: TIniFile;
 begin
   if ResolutionsCB.Text <> '1280x720' then begin
@@ -73,14 +74,22 @@ begin
   if ListBox.ItemIndex <> -1 then begin
     WND:=FindWindow(nil, PChar(ListBox.Items[ListBox.ItemIndex]));
     if WND <> 0 then begin
-      if AutoCB.Enabled = false then begin
-        WndWidth:=StrToIntDef(Copy(ResolutionsCB.Text, 1, Pos('x', ResolutionsCB.Text) - 1), 640);
-        WndHeight:=StrToIntDef(Copy(ResolutionsCB.Text, Pos('x', ResolutionsCB.Text) + 1, Length(ResolutionsCB.Text)), 480);
+      if AutoCB.Checked = false then begin
+        if ResolutionsCB.Text[1] = 'x' then begin //Multiply value
+          MultiplyValue:=StrToIntDef(Copy(ResolutionsCB.Text, 1, Length(ResolutionsCB.Text)), 1);
+          Windows.GetClientRect(Wnd, WndRect);
+          WndWidth:=WndRect.Right * MultiplyValue;
+          WndHeight:=WndRect.Bottom * MultiplyValue;
+        end else begin  //Statis resolutions
+          WndWidth:=StrToIntDef(Copy(ResolutionsCB.Text, 1, Pos('x', ResolutionsCB.Text) - 1), 640);
+          WndHeight:=StrToIntDef(Copy(ResolutionsCB.Text, Pos('x', ResolutionsCB.Text) + 1, Length(ResolutionsCB.Text)), 480);
+        end;
       end else begin
         Windows.GetClientRect(Wnd, WndRect);
         WndWidth:=WndRect.Right;
         WndHeight:=WndRect.Bottom;
       end;
+      //MessageBox(Handle, PChar(IntToStr(WndWidth) + ' ' + IntToStr(WndHeight) + ' ' + IntToStr(MultiplyValue)), '', 0);
       SetWindowLong(Wnd, GWL_STYLE, GetWindowLong(Wnd, GWL_STYLE) and not WS_BORDER and not WS_SIZEBOX and not WS_DLGFRAME);
       SetWindowPos(Wnd, HWND_TOP, Screen.Width div 2 - WndWidth div 2, Screen.Height div 2 - WndHeight div 2, WndWidth, WndHeight, SWP_FRAMECHANGED);
       SetForegroundWindow(Wnd);
